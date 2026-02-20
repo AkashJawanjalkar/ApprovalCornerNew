@@ -1,0 +1,443 @@
+<mvc:View
+    controllerName="com.approvalcorner.app.controller.App"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:uiTable="sap.ui.table"
+    displayBlock="true"
+>
+    <App id="app">
+        <pages>
+            <f:DynamicPage id="approvalDynamicPage">
+                <!-- ================= TITLE AREA ================= -->
+                <!-- <f:title>
+                    <f:DynamicPageTitle>
+                        <f:heading>
+                            <Title
+                                text="{i18n>appTitle}"
+                                level="H1"
+                            />
+                        </f:heading>
+
+                        <f:actions>
+                            <Button
+                                icon="sap-icon://refresh"
+                                text="{i18n>refresh}"
+                                press="onRefresh"
+                                type="Transparent"
+                            />
+                        </f:actions>
+                    </f:DynamicPageTitle>
+                </f:title> -->
+
+                <!-- ================= HEADER (SEGMENTED BUTTON) ================= -->
+                <f:header>
+                    <f:DynamicPageHeader>
+                        <SegmentedButton
+                            id="statusSegmentedButton"
+                            selectedKey="New"
+                            class="sapUiMediumMarginTop"
+                            selectionChange="onStatusChange"
+                        >
+                            <items>
+                                <SegmentedButtonItem
+                                    key="New"
+                                    text="{i18n>newTab} ({approval>/NewCount})"
+                                />
+                                <SegmentedButtonItem
+                                    key="InProgress"
+                                    text="{i18n>inProgressTab} ({approval>/InProgressCount})"
+                                />
+                                <SegmentedButtonItem
+                                    key="Closed"
+                                    text="{i18n>closedTab} ({approval>/ClosedCount})"
+                                />
+                            </items>
+                        </SegmentedButton>
+                    </f:DynamicPageHeader>
+                </f:header>
+
+                <!-- ================= CONTENT AREA ================= -->
+                <f:content>
+                    <VBox width="100%" class="sapUiResponsiveContentPadding">
+                        <!-- ================= NEW TABLE ================= -->
+                        <uiTable:Table
+                            id="approvalTable"
+                            rows="{approval>/ApprovalItems}"
+                            visibleRowCount="10"
+                            selectionMode="Single"
+                            enableColumnReordering="true"
+                            visible="true"
+                        >
+                            <uiTable:extension>
+                                <OverflowToolbar>
+                                    <Title
+                                        text="{i18n>approvalItems}"
+                                        level="H2"
+                                    />
+                                    <ToolbarSpacer />
+
+                                    <Button
+                                        icon="sap-icon://inspect"
+                                        text="{i18n>review}"
+                                        type="Emphasized"
+                                        press="onReview"
+                                    />
+
+                                    <Button
+                                        icon="sap-icon://share"
+                                        text="Reassign"
+                                        type="Accept"
+                                        press="onReassignPress"
+                                    />
+
+                                    <Button
+                                        icon="sap-icon://locked"
+                                        text="Lock"
+                                        type="Attention"
+                                        press="onLockPress"
+                                    />
+
+                                    <Button
+                                        icon="sap-icon://delete"
+                                        text="Terminate"
+                                        type="Reject"
+                                        press="onTerminatePress"
+                                    />
+                                </OverflowToolbar>
+                            </uiTable:extension>
+
+                            <uiTable:columns>
+                                <uiTable:Column width="60px">
+                                    <Label text="" />
+                                    <uiTable:template>
+                                        <RadioButton
+                                            select="onRowRadioSelect"
+                                        />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="connector"
+                                    sortProperty="connector"
+                                >
+                                    <Label text="{i18n>connector}" />
+                                    <uiTable:template>
+                                        <Text text="{approval>connector}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="userName"
+                                    sortProperty="userName"
+                                >
+                                    <Label text="{i18n>userName}" />
+                                    <uiTable:template>
+                                        <Text text="{approval>userName}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="jobId"
+                                    sortProperty="jobId"
+                                >
+                                    <Label text="{i18n>jobId}" />
+                                    <uiTable:template>
+                                        <Text text="{approval>jobId}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="reviewCycleName"
+                                    sortProperty="reviewCycleName"
+                                >
+                                    <Label text="{i18n>reviewCycleName}" />
+                                    <uiTable:template>
+                                        <Text
+                                            text="{approval>reviewCycleName}"
+                                        />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="fiscalYear"
+                                    sortProperty="fiscalYear"
+                                >
+                                    <Label text="{i18n>fiscalYear}" />
+                                    <uiTable:template>
+                                        <Text text="{approval>fiscalYear}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="fiscalQuarter"
+                                    sortProperty="fiscalQuarter"
+                                >
+                                    <Label text="{i18n>fiscalQuarter}" />
+                                    <uiTable:template>
+                                        <Text text="{approval>fiscalQuarter}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="reviewType"
+                                    sortProperty="reviewType"
+                                >
+                                    <Label text="{i18n>reviewType}" />
+                                    <uiTable:template>
+                                        <Text text="{approval>reviewType}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+                            </uiTable:columns>
+                        </uiTable:Table>
+
+                        <!-- //InProgress Tab -->
+
+                        <!-- // -->
+                        <uiTable:Table
+                            width="100%"
+                            id="approvalTableInProgress"
+                            rows="{view>/approvalData}"
+                            selectionMode="Single"
+                            visibleRowCount="10"
+                            enableColumnReordering="true"
+                            class="sapUiMediumMarginTop"
+                            visible="false"
+                        >
+                            <uiTable:extension>
+                                <OverflowToolbar>
+                                    <Title
+                                        text="{i18n>In Progress Items}"
+                                        level="H2"
+                                    />
+
+                                    <ToolbarSpacer />
+
+                                    <Button
+                                        id="reviewBtn1"
+                                        icon="sap-icon://employee"
+                                        text="{i18n>review}"
+                                        press="onReview"
+                                        type="Transparent"
+                                    />
+
+                                    <!-- <SearchField width="20%" placeholder="{i18n>searchPlaceholder}" search="onSearch" liveChange="onSearch" /> -->
+                                </OverflowToolbar>
+                            </uiTable:extension>
+
+                            <uiTable:columns>
+                                <uiTable:Column
+                                    width="50px"
+                                    hAlign="Center"
+                                >
+                                    <Label text="" />
+                                    <uiTable:template>
+                                        <RadioButton
+                                            select="onRowRadioSelect"
+                                        />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="connector"
+                                    sortProperty="connector"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>connector}" />
+                                    <uiTable:template>
+                                        <Text text="{view>connector}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="jobId"
+                                    sortProperty="jobId"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>jobId}" />
+                                    <uiTable:template>
+                                        <Text text="{view>jobId}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="reviewCycleName"
+                                    sortProperty="reviewCycleName"
+                                    width="200px"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>reviewCycleName}" />
+                                    <uiTable:template>
+                                        <Text text="{view>reviewCycleName}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="fiscalYear"
+                                    sortProperty="fiscalYear"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>fiscalYear}" />
+                                    <uiTable:template>
+                                        <Text text="{view>fiscalYear}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="fiscalQuarter"
+                                    sortProperty="fiscalQuarter"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>fiscalQuarter}" />
+                                    <uiTable:template>
+                                        <Text text="{view>fiscalQuarter}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="reviewType"
+                                    sortProperty="reviewType"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>reviewType}" />
+                                    <uiTable:template>
+                                        <Text text="{view>reviewType}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+                            </uiTable:columns>
+                        </uiTable:Table>
+
+                        <!-- //closed  -->
+                        <uiTable:Table
+                            width="100%"
+                            id="approvalTableClosed"
+                            rows="{view>/approvalData}"
+                            selectionMode="Single"
+                            visibleRowCount="10"
+                            enableColumnReordering="true"
+                            class="sapUiMediumMarginTop"
+                            visible="false"
+                        >
+                            <uiTable:extension>
+                                <OverflowToolbar>
+                                    <Title
+                                        text="{i18n>Closed Items}"
+                                        level="H2"
+                                    />
+
+                                    <ToolbarSpacer />
+
+                                    <Button
+                                        id="reviewBtn3"
+                                        icon="sap-icon://employee"
+                                        text="{i18n>review}"
+                                        press="onReview"
+                                        type="Transparent"
+                                    />
+
+                                    <!-- <SearchField width="20%" placeholder="{i18n>searchPlaceholder}" search="onSearch" liveChange="onSearch" /> -->
+                                </OverflowToolbar>
+                            </uiTable:extension>
+
+                            <uiTable:columns>
+                                <uiTable:Column
+                                    width="50px"
+                                    hAlign="Center"
+                                >
+                                    <Label text="" />
+                                    <uiTable:template>
+                                        <RadioButton
+                                            select="onRowRadioSelect"
+                                        />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="connector"
+                                    sortProperty="connector"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>connector}" />
+                                    <uiTable:template>
+                                        <Text text="{view>connector}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="jobId"
+                                    sortProperty="jobId"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>jobId}" />
+                                    <uiTable:template>
+                                        <Text text="{view>jobId}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="jobName"
+                                    sortProperty="jobName"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>JobName}" />
+                                    <uiTable:template>
+                                        <Text text="{view>jobName}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="fiscalYear"
+                                    sortProperty="fiscalYear"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>fiscalYear}" />
+                                    <uiTable:template>
+                                        <Text text="{view>fiscalYear}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="fiscalQuarter"
+                                    sortProperty="fiscalQuarter"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>fiscalQuarter}" />
+                                    <uiTable:template>
+                                        <Text text="{view>fiscalQuarter}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="reviewType"
+                                    sortProperty="reviewType"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>reviewType}" />
+                                    <uiTable:template>
+                                        <Text text="{view>reviewType}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+
+                                <uiTable:Column
+                                    filterProperty="userName"
+                                    sortProperty="userName"
+                                    hAlign="Center"
+                                >
+                                    <Label text="{i18n>userName}" />
+                                    <uiTable:template>
+                                        <Text text="{view>userName}" />
+                                    </uiTable:template>
+                                </uiTable:Column>
+                            </uiTable:columns>
+                        </uiTable:Table>
+
+                        <!-- columns same as yours (unchanged) -->
+                    </VBox>
+
+                   
+                   
+                </f:content>
+            </f:DynamicPage>
+        </pages>
+    </App>
+</mvc:View>

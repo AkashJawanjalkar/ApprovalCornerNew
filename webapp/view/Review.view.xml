@@ -1,0 +1,662 @@
+<mvc:View
+    controllerName="com.approvalcorner.app.controller.Review"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:uiTable="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+>
+    <Page
+        title=""
+        showNavButton="true"
+        navButtonPress="onNavBack"
+    >
+        <!-- Top Refresh Panel -->
+        <!-- <Panel
+            class="sapUiMediumMarginBottom"
+            id="refreshsection"
+            visible="true"
+            width="100%"
+            height="80px"
+        >
+            <Toolbar>
+                <Title text="Review Access" level="H4" />
+                <ToolbarSpacer />
+                <Button text="Refresh" icon="sap-icon://refresh" press="onRefresh" />
+            </Toolbar>
+        </Panel> -->
+
+        <!-- ===================================================== -->
+        <VBox
+            width="100%"
+            class="sapUiResponsiveContentPadding sapUiSmallMarginTop"
+        >
+            <!-- Reusable Toolbar for all tables -->
+            <Toolbar
+                class="reviewToolbar"
+                visible="{view>/showToolbar}"
+            >
+                <Title
+                    text=" Review ()"
+                    level="H2"
+                />
+                <ToolbarSpacer />
+                <Button
+                    text="Retain"
+                    icon="sap-icon://customer-order-entry"
+                    press="onMassRetain"
+                    type="Negative"
+                />
+                <Button
+                    text="Remove"
+                    icon="sap-icon://decline"
+                    press="onMassRemove"
+                    type="Attention"
+                />
+
+                <Button
+                    text="Upload"
+                    icon="sap-icon://upload"
+                    press="onUpload"
+                    type="Success"
+                />
+                <Button
+                    text="Export"
+                    icon="sap-icon://excel-attachment"
+                    press="onExport"
+                    type="Emphasized"
+                />
+            </Toolbar>
+
+            <!-- Full Access Table -->
+            <uiTable:Table
+                id="fullReviewTable"
+                rows="{reviewModel>/fullData}"
+                visible="{reviewModel>/showFull}"
+                selectionMode="MultiToggle"
+                visibleRowCount="10"
+                enableColumnReordering="true"
+            >
+                <uiTable:title />
+                <uiTable:columns>
+                    <!-- <uiTable:Column width="140px" sortProperty="connector" filterProperty="connector">
+        <Label text="Connector" />
+        <uiTable:template>
+            <Text text="{reviewModel>connector}" />
+        </uiTable:template>
+    </uiTable:Column> -->
+
+                    <uiTable:Column
+                        width="180px"
+                        sortProperty="fullName"
+                        filterProperty="fullName"
+                    >
+                        <Label text=" User Full Name" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>fullName}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="180px"
+                        sortProperty="roleName"
+                        filterProperty="roleName"
+                    >
+                        <Label text="Role Name" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>roleName}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="250px"
+                        sortProperty="roleDescription"
+                        filterProperty="roleDescription"
+                    >
+                        <Label text="Role Description" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>roleDescription}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="180px"
+                        sortProperty="licenseType"
+                        filterProperty="licenseType"
+                    >
+                        <Label text="Licensing Category" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>licenseType}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="130px"
+                        sortProperty="fromDate"
+                        filterProperty="fromDate"
+                    >
+                        <Label text="From Date" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>fromDate}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="130px"
+                        sortProperty="toDate"
+                        filterProperty="toDate"
+                    >
+                        <Label text="To Date" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>toDate}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="170px"
+                        sortProperty="tcodeCount"
+                        filterProperty="tcodeCount"
+                    >
+                        <Label text="Utilized T-Code Count" />
+                        <uiTable:template>
+                            <ObjectNumber number="{reviewModel>tcodeCount}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column width="150px">
+                        <Label text="Action" />
+                        <uiTable:template>
+                            <ComboBox
+                                selectedKey="{reviewModel>action}"
+                                change="onActionChange"
+                                width="100%"
+                            >
+                                <core:Item
+                                    key="Retain"
+                                    text="Retain"
+                                />
+                                <core:Item
+                                    key="Remove"
+                                    text="Remove"
+                                />
+                            </ComboBox>
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column width="220px">
+                        <Label text="Comment" />
+                        <uiTable:template>
+                            <ComboBox
+                                selectedKey="{reviewModel>comment}"
+                                change="onCommentChange"
+                                items="{commentModel>/comments}"
+                                width="100%"
+                            >
+                                <core:Item
+                                    key="{commentModel>key}"
+                                    text="{commentModel>text}"
+                                />
+                            </ComboBox>
+                        </uiTable:template>
+                    </uiTable:Column>
+                </uiTable:columns>
+            </uiTable:Table>
+
+            <!-- Sensitive Access Table -->
+            <uiTable:Table
+                id="sensitiveReviewTable"
+                rows="{reviewModel>/sensitiveData}"
+                visible="{reviewModel>/showSensitive}"
+                selectionMode="MultiToggle"
+                visibleRowCount="10"
+                enableColumnReordering="true"
+            >
+                <uiTable:title>
+                    <!-- <Title
+                            text="Sensitive  Review ()"
+                            level="H2"
+                        /> -->
+                </uiTable:title>
+                <uiTable:columns>
+                    <!-- <uiTable:Column width="140px" sortProperty="connector" filterProperty="connector">
+        <Label text="Connector" />
+        <uiTable:template>
+            <Text text="{reviewModel>connector}" />
+        </uiTable:template>
+    </uiTable:Column> -->
+
+                    <uiTable:Column
+                        width="180px"
+                        sortProperty="fullName"
+                        filterProperty="fullName"
+                    >
+                        <Label text=" User Full Name" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>fullName}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="200px"
+                        sortProperty="roleName"
+                        filterProperty="roleName"
+                    >
+                        <Label text="Role/Profile Name" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>roleName}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="280px"
+                        sortProperty="roleDescription"
+                        filterProperty="roleDescription"
+                    >
+                        <Label text="Role/Profile Description" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>roleDescription}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="180px"
+                        sortProperty="licenseType"
+                        filterProperty="licenseType"
+                    >
+                        <Label text="Licensing Category" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>licenseType}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="130px"
+                        sortProperty="fromDate"
+                        filterProperty="fromDate"
+                    >
+                        <Label text="From Date" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>fromDate}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="130px"
+                        sortProperty="toDate"
+                        filterProperty="toDate"
+                    >
+                        <Label text="To Date" />
+                        <uiTable:template>
+                            <Text text="{reviewModel>toDate}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="180px"
+                        sortProperty="tcodeCount"
+                        filterProperty="tcodeCount"
+                        hAlign="Center"
+                    >
+                        <Label text="Utilized T-Code Count" />
+                        <uiTable:template>
+                            <ObjectNumber number="{reviewModel>tcodeCount}" />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="150px"
+                        hAlign="Center"
+                    >
+                        <Label text="Action" />
+                        <uiTable:template>
+                            <ComboBox
+                                width="100%"
+                                selectedKey="{reviewModel>action}"
+                                change="onActionChange"
+                            >
+                                <core:Item
+                                    key="Retain"
+                                    text="Retain"
+                                />
+                                <core:Item
+                                    key="Remove"
+                                    text="Remove"
+                                />
+                            </ComboBox>
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column width="240px">
+                        <Label text="Predefined Comment" />
+                        <uiTable:template>
+                            <ComboBox
+                                width="100%"
+                                selectedKey="{reviewModel>comment}"
+                                change="onCommentChange"
+                                items="{commentModel>/comments}"
+                            >
+                                <core:Item
+                                    key="{commentModel>key}"
+                                    text="{commentModel>text}"
+                                />
+                            </ComboBox>
+                        </uiTable:template>
+                    </uiTable:Column>
+                </uiTable:columns>
+            </uiTable:Table>
+
+            <!-- SoD Table -->
+            <uiTable:Table
+                id="sodReviewTable"
+                rows="{reviewModel>/sodData}"
+                visible="{reviewModel>/showSOD}"
+                selectionMode="MultiToggle"
+                visibleRowCount="10"
+                enableColumnReordering="true"
+            >
+                <uiTable:title>
+                    <!-- <Title
+                            text="Sod  Review ()"
+                            level="H2"
+                        /> -->
+                </uiTable:title>
+                <uiTable:columns>
+                    <!-- <uiTable:Column width="130px" sortProperty="connector" filterProperty="connector">
+        <Label text="Connector" />
+        <uiTable:template>
+            <Text text="{reviewModel>connector}" wrapping="false"/>
+        </uiTable:template>
+    </uiTable:Column> -->
+
+                    <uiTable:Column
+                        width="180px"
+                        sortProperty="fullName"
+                        filterProperty="fullName"
+                    >
+                        <Label text=" User Full Name" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>fullName}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="120px"
+                        sortProperty="jobId"
+                        filterProperty="jobId"
+                    >
+                        <Label text="Job ID" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>jobId}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="130px"
+                        sortProperty="username"
+                        filterProperty="username"
+                    >
+                        <Label text="Username" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>username}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="140px"
+                        sortProperty="userGroup"
+                        filterProperty="userGroup"
+                    >
+                        <Label text="User Group" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>userGroup}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="150px"
+                        sortProperty="riskType"
+                        filterProperty="riskType"
+                    >
+                        <Label text="Risk Type" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>riskType}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="120px"
+                        sortProperty="riskId"
+                        filterProperty="riskId"
+                    >
+                        <Label text="Risk ID" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>riskId}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="220px"
+                        sortProperty="riskDescription"
+                        filterProperty="riskDescription"
+                    >
+                        <Label text="Risk Description" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>riskDescription}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="110px"
+                        sortProperty="riskLevel"
+                        filterProperty="riskLevel"
+                    >
+                        <Label text="Risk Level" />
+                        <uiTable:template>
+                            <ObjectStatus
+                                text="{reviewModel>riskLevel}"
+                                state="Error"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="120px"
+                        sortProperty="functionId"
+                        filterProperty="functionId"
+                    >
+                        <Label text="Function ID" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>functionId}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="220px"
+                        sortProperty="functionDescription"
+                        filterProperty="functionDescription"
+                    >
+                        <Label text="Function Description" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>functionDescription}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="180px"
+                        sortProperty="businessProcess"
+                        filterProperty="businessProcess"
+                    >
+                        <Label text="Business Process" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>businessProcess}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="180px"
+                        sortProperty="roleName"
+                        filterProperty="roleName"
+                    >
+                        <Label text="Role Name" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>roleName}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="220px"
+                        sortProperty="roleDescription"
+                        filterProperty="roleDescription"
+                    >
+                        <Label text="Role Description" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>roleDescription}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="140px"
+                        sortProperty="mitigationId"
+                        filterProperty="mitigationId"
+                    >
+                        <Label text="Mitigation ID" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>mitigationId}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="120px"
+                        sortProperty="startDate"
+                        filterProperty="startDate"
+                    >
+                        <Label text="Start Date" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>startDate}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column
+                        width="120px"
+                        sortProperty="endDate"
+                        filterProperty="endDate"
+                    >
+                        <Label text="End Date" />
+                        <uiTable:template>
+                            <Text
+                                text="{reviewModel>endDate}"
+                                wrapping="false"
+                            />
+                        </uiTable:template>
+                    </uiTable:Column>
+
+                    <uiTable:Column width="140px">
+                        <Label text="Action" />
+                        <uiTable:template>
+                            <ComboBox
+                                width="120px"
+                                selectedKey="{reviewModel>action}"
+                                change="onActionChange"
+                            >
+                                <core:Item
+                                    key="Retain"
+                                    text="Retain"
+                                />
+                                <core:Item
+                                    key="Remove"
+                                    text="Remove"
+                                />
+                            </ComboBox>
+                        </uiTable:template>
+                    </uiTable:Column>
+                </uiTable:columns>
+            </uiTable:Table>
+
+          
+
+        </VBox>
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- Footer -->
+        <footer>
+            <OverflowToolbar
+                class="sapUiSmallMarginBottom sapUiMediumMarginTop"
+            >
+                <ToolbarSpacer />
+                <Button
+                    text="Save"
+                    icon="sap-icon://save"
+                    press="onSave"
+                    type="Emphasized"
+                />
+                <Button
+                    text="Submit"
+                    icon="sap-icon://complete"
+                    press="onSubmitReview"
+                    type="Accept"
+                />
+                <Button
+                    text="Cancel"
+                    icon="sap-icon://cancel"
+                    press="onCancel"
+                    type="Critical"
+                />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

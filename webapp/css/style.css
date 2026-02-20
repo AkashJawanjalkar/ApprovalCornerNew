@@ -1,0 +1,20 @@
+/* Retain Button - Professional Green */
+.sapMBtn.onCancel .sapMBtnInner {
+    background-color:#a31221 !important;
+    border-color:#a31221 !important;
+    color: #ffffff !important;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* Hover */
+.sapMBtn.onCancel:hover .sapMBtnInner {
+    background-color:#a31221 !important;
+    border-color:#a31221 !important;
+}
+
+/* Active */
+.sapMBtn.onCancel:active .sapMBtnInner {
+    background-color:#a31221 !important;
+    border-color:#f55767 !important;
+}

@@ -1,0 +1,116 @@
+{
+  "_version": "1.58.0",
+  "sap.app": {
+    "id": "com.approvalcorner.app",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "tags": {
+      "keywords": [
+        "Approval",
+        "Corner",
+        "Fiori"
+      ]
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "rootView": {
+      "viewName": "com.approvalcorner.app.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "App"
+    },
+    "dependencies": {
+      "minUI5Version": "1.100.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {},
+        "sap.ui.layout": {},
+        "sap.f": {}
+      }
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.approvalcorner.app.i18n.i18n"
+        }
+      },
+      "": {
+        "type": "sap.ui.model.odata.v2.ODataModel",
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "serviceUrl": "/sap/opu/odata/sap/ZAPPROVAL_CORNER_SRV/",
+          "odataVersion": "2.0",
+          "annotations": [],
+          "useBatch": true,
+          "maxAge": 86400000,
+          "defaultCountMode": "Inline"
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "async": true,
+        "viewPath": "com.approvalcorner.app.view",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "clearControlAggregation": false
+      },
+   
+
+
+      "routes": [
+        {
+          "name": "RouteApp",
+          "pattern": "",
+          "target": "TargetApp"
+        },
+        {
+          "name": "RouteReview",
+          "pattern": "review/{mode}/{type}",
+          "target": "TargetReview"
+        }
+      ],
+
+      "targets": {
+
+        "TargetApp": {
+          "viewName": "App"
+        },
+
+        "TargetReview": {
+          "viewName": "Review"
+        }
+
+      }
+    }
+  },
+  "sap.platform.hcp": {
+    "uri": ""
+  }
+}
+
